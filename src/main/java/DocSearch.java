@@ -12,5 +12,7 @@ import java.util.Base64;
  */
 public class DocSearch {
 
-
+    public static void main(String[] args) {
+        System.out.println("hello world");
+    }
 }
