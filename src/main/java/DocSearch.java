@@ -13,19 +13,4 @@ import java.util.Base64;
 public class DocSearch {
 
 
-    public static void main(String[] args) throws IOException {
-
-        BASE64Encoder encoder = new BASE64Encoder();
-
-        Path path = Paths.get("/home/berk/IdeaProjects/es-docsearch/README.md");
-        InputStream buffer1 = Files.newInputStream(path);
-        long size = Files.size(path);
-
-        //BufferedReader aa = new BufferedReader(buffer1);
-
-        byte[] bytes = new byte[Long.valueOf(size).intValue()];
-        Streams.readFully(buffer1, bytes);
-        Base64.getEncoder().encode(bytes);
-    }
-
 }

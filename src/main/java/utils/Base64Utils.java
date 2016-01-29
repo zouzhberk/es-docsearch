@@ -32,6 +32,10 @@ final public class Base64Utils {
         return decoder.decodeBuffer(base64String);
     }
 
+    public static String decodeToString(String base64String) throws IOException {
+        return new String(decodeToBytes(base64String));
+    }
+
     public static void main(String[] args) throws IOException {
         Path path = Paths.get("/home/berk/IdeaProjects/es-docsearch/README.md");
         String base64str = new String(encodeToBase64(path));
