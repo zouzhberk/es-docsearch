@@ -1,0 +1,18 @@
+apply plugin: 'java'
+
+
+dependencies {
+    compile files('libs/elasticsearch-2.1.1.jar',
+            'libs/jackson-core-2.6.2.jar',
+            'libs/joda-time-2.8.2.jar',
+            'libs/t-digest-3.0.jar',
+            'libs/gson-2.2.4.jar',
+            'libs/jackson-dataformat-cbor-2.6.2.jar',
+            'libs/jsr166e-1.1.0.jar',
+            'libs/guava-18.0.jar',
+            'libs/jackson-dataformat-smile-2.6.2.jar',
+            'libs/lucene-core-5.3.1.jar',
+            'libs/hppc-0.7.1.jar',
+            'libs/jackson-dataformat-yaml-2.6.2.jar',
+            'libs/netty-3.10.5.Final.jar')
+}

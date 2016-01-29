@@ -1,0 +1,21 @@
+<component name="libraryTable">
+  <library name="elasticsearch-2.1.1">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/libs/elasticsearch-2.1.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/gson-2.2.4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/guava-18.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/hppc-0.7.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/jackson-core-2.6.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/jackson-dataformat-cbor-2.6.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/jackson-dataformat-smile-2.6.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/jackson-dataformat-yaml-2.6.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/joda-time-2.8.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/jsr166e-1.1.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/lucene-core-5.3.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/netty-3.10.5.Final.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/t-digest-3.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
