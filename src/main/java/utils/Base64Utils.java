@@ -1,8 +1,6 @@
 package utils;
 
 import org.elasticsearch.common.io.Streams;
-import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,18 +16,18 @@ final public class Base64Utils {
 
 
     public static byte[] encodeToBase64(Path path) throws IOException {
-        BASE64Encoder encoder = new BASE64Encoder();
+        Base64.Encoder encoder = Base64.getEncoder();
         InputStream buffer1 = Files.newInputStream(path);
         long size = Files.size(path);
         byte[] bytes = new byte[Long.valueOf(size).intValue()];
 
         Streams.readFully(buffer1, bytes);
-        return Base64.getEncoder().encode(bytes);
+        return encoder.encode(bytes);
     }
 
     public static byte[] decodeToBytes(String base64String) throws IOException {
-        BASE64Decoder decoder = new BASE64Decoder();
-        return decoder.decodeBuffer(base64String);
+        Base64.Decoder decoder = Base64.getDecoder();
+        return decoder.decode(base64String);
     }
 
     public static String decodeToString(String base64String) throws IOException {
