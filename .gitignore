@@ -1,5 +1,6 @@
 # intellij files
 .idea/
+.idea/*.xml
 *.iml
 *.ipr
 *.iws
@@ -16,6 +17,7 @@ nbactions.xml
 
 # gradle stuff
 .gradle/
+gradle/
 build/
 generated-resources/
 

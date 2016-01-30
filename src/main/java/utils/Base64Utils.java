@@ -35,7 +35,7 @@ final public class Base64Utils {
     }
 
     public static void main(String[] args) throws IOException {
-        Path path = Paths.get("/home/berk/IdeaProjects/es-docsearch/README.md");
+        Path path = Paths.get("/home/lyz/workspace/elasticsearch-definitive-guide-cn/010_Intro/05_What_is_it.md");
         String base64str = new String(encodeToBase64(path));
 
         System.out.println(base64str);

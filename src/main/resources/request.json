@@ -1,0 +1,15 @@
+{
+  "person": {
+    "properties": {
+      "file": {
+        "type": "attachment",
+        "fields": {
+          "content_type": {
+            "type": "string",
+            "store": true
+          }
+        }
+      }
+    }
+  }
+}
