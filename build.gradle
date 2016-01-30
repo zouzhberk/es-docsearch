@@ -1,7 +1,13 @@
 apply plugin: 'java'
 
 
+repositories { mavenCentral() }
+
+//javadoc {
+//    exclude "**/rx/internal/**"
+//}
 dependencies {
+    compile 'io.reactivex:rxjava:1.1.0'
     compile files('libs/elasticsearch-2.1.1.jar',
             'libs/jackson-core-2.6.2.jar',
             'libs/joda-time-2.8.2.jar',
@@ -15,4 +21,5 @@ dependencies {
             'libs/hppc-0.7.1.jar',
             'libs/jackson-dataformat-yaml-2.6.2.jar',
             'libs/netty-3.10.5.Final.jar')
+
 }
