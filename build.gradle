@@ -8,6 +8,11 @@ repositories { mavenCentral() }
 //}
 dependencies {
     compile 'io.reactivex:rxjava:1.1.0'
+    compile 'com.squareup.retrofit2:retrofit:2.0.0-beta3'
+    compile 'com.squareup.retrofit2:adapter-rxjava:2.0.0-beta3'
+
+    compile 'com.squareup.retrofit2:converter-jackson:2.0.0-beta3'
+
     compile files('libs/elasticsearch-2.1.1.jar',
             'libs/jackson-core-2.6.2.jar',
             'libs/joda-time-2.8.2.jar',
