@@ -4,14 +4,14 @@ import org.elasticsearch.client.Requests;
 import org.elasticsearch.common.io.Streams;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.common.xcontent.XContentFactory;
+import org.elasticsearch.rest.RestChannel;
+import org.elasticsearch.search.aggregations.support.format.ValueFormatter;
 import utils.Base64Utils;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -36,8 +36,13 @@ public class DocIndexs {
     }
 
     public static boolean createMapping(String indexName, String type) throws IOException {
-        InputStream is = Streams.class.getResourceAsStream("/home/lyz/workspace/es-docsearch/src/main/resources/doc.json");
-        String mapping = Streams.copyToString(new InputStreamReader(is, StandardCharsets.UTF_8));
+        File f = new File("/home/lyz/workspace/es-docsearch/src/main/resources/doc.json");
+        InputStream in = new FileInputStream(f);
+        byte b[] = new byte[(int) f.length()];     //创建合适文件大小的数组
+        in.read(b);    //读取文件中的内容到b[]数组
+//        InputStream is = Streams.class.getResourceAsStream("/home/lyz/workspace/es-docsearch/src/main/resources/doc.json");
+        String mapping = new String(b);
+        in.close();
         PutMappingRequest mappingInfo =
                 Requests.putMappingRequest(indexName).type(type).source(mapping);
         new Client().getClient().admin().indices().putMapping(mappingInfo).actionGet();
@@ -69,13 +74,14 @@ public class DocIndexs {
     }
 
     public static void main(String[] args) throws IOException {
-        if (createIndex("docindex")) {
-            if (createMapping("docindex", "htmltype")) {
+        String indexname = "docindex" + new Date().getTime();
+        if (createIndex(indexname)) {
+            if (createMapping(indexname, "htmltype")) {
                 Map<String, String> indexdoc = getIndexFile();
                 for (String keys : indexdoc.keySet()) {
-                    XContentBuilder builderIndex = XContentFactory.jsonBuilder().startObject().field("title", keys)
-                            .field("content", indexdoc.get(keys)).endObject();
-                    index(builderIndex, "htmltype", "docindex");
+                    XContentBuilder builderIndex = XContentFactory.jsonBuilder().startObject()
+                            .field("file", indexdoc.get(keys)).endObject();
+                    index(builderIndex, "htmltype", indexname);
                 }
             }
 

@@ -2,18 +2,19 @@
   "URL": "http: //localhost:9200/indexname/indextype/1/",
   "METHOD": "post",
   "REQUEST": {
-    "file": "e1xydGYxXGFuc2kNCkxvcmVtIGlwc3VtIGRvbG9yIHNpdCBhbWV0DQpccGFyIH0=",
-    "RESPONSE": {
-      "_index": "doc2",
-      "_type": "html",
-      "_id": "1",
-      "_version": 1,
-      "_shards": {
-        "total": 2,
-        "successful": 1,
-        "failed": 0
-      },
-      "created": true
-    }
+    "file": "e1xydGYxXGFuc2kNCkxvcmVtIGlwc3VtIGRvbG9yIHNpdCBhbWV0DQpccGFyIH0="
+  },
+  "RESPONSE": {
+    "_index": "doc2",
+    "_type": "html",
+    "_id": "1",
+    "_version": 1,
+    "_shards": {
+      "total": 2,
+      "successful": 1,
+      "failed": 0
+    },
+    "created": true
   }
+}
 }
