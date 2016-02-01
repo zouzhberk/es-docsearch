@@ -1,13 +1,15 @@
 package org.elasticsearch.docsearch.service;
 
-import org.elasticsearch.action.search.SearchRequest;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import org.elasticsearch.docsearch.domain.SearchResponse;
 import org.elasticsearch.docsearch.domain.ServerEntity;
 import retrofit2.JacksonConverterFactory;
 import retrofit2.Retrofit;
 import retrofit2.RxJavaCallAdapterFactory;
-import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.Query;
 import rx.Observable;
 
 import java.io.IOException;
@@ -22,7 +24,10 @@ public interface ElasticSearchService {
     public Observable<ServerEntity> getServerInfo();
 
     @POST("/_search")
-    public void search(@Body SearchRequest request);
+    public Observable<SearchResponse> search(@Query("size") int size, @Query("from") int from);
+
+    @POST("/_search")
+    public Observable<SearchResponse> search();
 
     public static void main(String[] args) throws IOException {
         Retrofit retrofit = new Retrofit.Builder().baseUrl("http://localhost:9200")
@@ -33,6 +38,9 @@ public interface ElasticSearchService {
         esservice.getServerInfo().subscribe(x -> {
             System.out.println(x);
         });
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
+        esservice.search().subscribe(x -> System.out.println(gson.toJson(x)));
+        // QueryBuilders.indicesQuery(QueryBuilder.)
     }
 }
