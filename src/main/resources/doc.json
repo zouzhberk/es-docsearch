@@ -1,54 +1,14 @@
 {
-  "doc": {
-    "template": "doc*",
-    "settings": {
-      "index.number_of_shards": 5,
-      "number_of_replicas": 1
-    },
-    "mappings": {
-      "_default_": {
-        "_source": {
-          "enabled": false
-        }
-      },
-      "news": {
-        "_source": {
-          "enabled": true
-        },
-        "_all": {
-          "enabled": false
-        },
-        "properties": {
-          "file": {
-            "type": "attachment",
-            "fields": {
-              "content": {
-                "store": "yes",
-                "analyzer": "ik",
-                "term_vector": "with_positions_offsets"
-              },
-              "title": {
-                "store": "yes"
-              },
-              "date": {
-                "store": "yes"
-              },
-              "author": {
-                "analyzer": "ik"
-              },
-              "keywords": {
-                "store": "yes"
-              },
-              "content_type": {
-                "store": "yes"
-              },
-              "content_length": {
-                "store": "yes"
-              },
-              "language": {
-                "store": "yes"
-              }
-            }
+  "htmltype": {
+    "properties": {
+      "file": {
+        "type": "attachment",
+        "fields": {
+          "content": {
+            "type": "string",
+            "analyser": "ik",
+            "term_vector": "with_positions_offsets",
+            "store": true
           }
         }
       }

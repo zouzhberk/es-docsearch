@@ -1,15 +1,20 @@
+import org.elasticsearch.action.admin.indices.mapping.put.PutMappingRequest;
 import org.elasticsearch.action.index.IndexResponse;
+import org.elasticsearch.client.Requests;
+import org.elasticsearch.common.io.Streams;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.common.xcontent.XContentFactory;
 import utils.Base64Utils;
 
+import java.io.File;
 import java.io.IOException;
-import java.net.InetAddress;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.UnknownHostException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.*;
-import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Map;
 
 /**
  * Created by berk on 1/29/16.
@@ -22,15 +27,21 @@ public class DocIndexs {
         return true;
     }
 
-    public static boolean index(XContentBuilder builderIndex) throws IOException {
+    public static boolean index(XContentBuilder builderIndex, String type, String index) throws IOException {
 
-        IndexResponse response = new Client().getClient().prepareIndex("docindex", "htmltype").setSource(builderIndex.string())
+        IndexResponse response = new Client().getClient().prepareIndex(index, type).setSource(builderIndex.string())
                 .get();
         System.out.println(response);
         return true;
     }
 
-    public static boolean createMapping() {
+    public static boolean createMapping(String indexName, String type) throws IOException {
+        InputStream is = Streams.class.getResourceAsStream("/home/lyz/workspace/es-docsearch/src/main/resources/doc.json");
+        String mapping = Streams.copyToString(new InputStreamReader(is, StandardCharsets.UTF_8));
+        PutMappingRequest mappingInfo =
+                Requests.putMappingRequest(indexName).type(type).source(mapping);
+        new Client().getClient().admin().indices().putMapping(mappingInfo).actionGet();
+
         return true;
     }
 
@@ -59,11 +70,13 @@ public class DocIndexs {
 
     public static void main(String[] args) throws IOException {
         if (createIndex("docindex")) {
-            Map<String, String> indexdoc = getIndexFile();
-            for (String keys : indexdoc.keySet()) {
-                XContentBuilder builderIndex = XContentFactory.jsonBuilder().startObject().field("title", keys)
-                        .field("content", indexdoc.get(keys)).endObject();
-                index(builderIndex);
+            if (createMapping("docindex", "htmltype")) {
+                Map<String, String> indexdoc = getIndexFile();
+                for (String keys : indexdoc.keySet()) {
+                    XContentBuilder builderIndex = XContentFactory.jsonBuilder().startObject().field("title", keys)
+                            .field("content", indexdoc.get(keys)).endObject();
+                    index(builderIndex, "htmltype", "docindex");
+                }
             }
 
         }
