@@ -8,6 +8,7 @@ import org.elasticsearch.docsearch.DocSearchRequest;
 import org.elasticsearch.docsearch.DocumentEntity;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.node.NodeBuilder;
+import org.elasticsearch.search.builder.SearchSourceBuilder;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 import rx.subjects.PublishSubject;
@@ -29,6 +30,7 @@ public class DocSearch {
         InetSocketAddress address = new InetSocketAddress("localhost", 9300);
         TransportAddress transportAddress = new InetSocketTransportAddress(address);
         client = TransportClient.builder().settings(settings).build().addTransportAddress(transportAddress);
+
 
 
         ListenableActionFuture<SearchResponse> future = client.prepareSearch("test")
