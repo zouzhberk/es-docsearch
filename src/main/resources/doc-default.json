@@ -1,0 +1,35 @@
+{
+  "htmltype": {
+    "properties": {
+      "file": {
+        "type": "attachment",
+        "fields": {
+          "content": {
+            "type": "string",
+            "store": true,
+            "term_vector": "with_positions_offsets",
+            "analyzer": "ik"
+          }
+        }
+      },
+      "title": {
+        "type": "string",
+        "store": true,
+        "analyzer": "ik",
+        "term_vector": "with_positions_offsets"
+      },
+      "date": {
+        "type": "date",
+        "format": "strict_date_optional_time||epoch_millis"
+      },
+      "docname": {
+        "type": "string",
+        "index": "no"
+      },
+      "sectionname": {
+        "type": "string",
+        "index": "no"
+      }
+    }
+  }
+}

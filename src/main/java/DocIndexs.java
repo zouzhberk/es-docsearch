@@ -2,20 +2,18 @@ import org.elasticsearch.action.admin.indices.mapping.put.PutMappingRequest;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.client.Requests;
 import org.elasticsearch.client.transport.TransportClient;
-import org.elasticsearch.common.io.Streams;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.common.xcontent.XContentFactory;
-import org.elasticsearch.rest.RestChannel;
-import org.elasticsearch.search.aggregations.support.format.ValueFormatter;
 import utils.Base64Utils;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.nio.charset.StandardCharsets;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -40,7 +38,7 @@ public class DocIndexs {
     }
 
     public static boolean createMapping(TransportClient client, String indexName, String type) throws IOException {
-        File f = new File("/home/lyz/workspace/es-docsearch/src/main/resources/doc.json");
+        File f = new File("/home/lyz/workspace/es-docsearch/src/main/resources/doc-default.json");
         InputStream in = new FileInputStream(f);
         byte b[] = new byte[(int) f.length()];     //创建合适文件大小的数组
         in.read(b);    //读取文件中的内容到b[]数组
@@ -57,7 +55,7 @@ public class DocIndexs {
     public static Map<String, String> getIndexFile() throws IOException {
         LinkedList<String> folderList = new LinkedList<String>();
         folderList.add(path);
-        Map<String, String> fileList = new HashMap<String, String>();
+        Map<String, String> fileList = new HashMap<>();
         while (folderList.size() > 0) {
 
             File file = new File(folderList.peek());
@@ -69,7 +67,7 @@ public class DocIndexs {
                     folderList.add(files[i].getPath());
                 } else {
 
-                    fileList.put(files[i].getAbsolutePath(), new String(Base64Utils.encodeToBase64(files[i].toPath())));
+                    fileList.put(files[i].getName(), new String(Base64Utils.encodeToBase64(files[i].toPath())));
                 }
             }
 
@@ -88,7 +86,10 @@ public class DocIndexs {
                 Map<String, String> indexdoc = getIndexFile();
                 for (String keys : indexdoc.keySet()) {
                     XContentBuilder builderIndex = XContentFactory.jsonBuilder().startObject()
-                            .field("file", indexdoc.get(keys)).endObject();
+                            .field("file", indexdoc.get(keys))
+                            .field("title", keys.split("/")[keys.split("/").length - 1])
+                            .field("date", LocalDateTime.now())
+                            .endObject();
                     index(client, builderIndex, "htmltype", indexname);
                 }
             }
