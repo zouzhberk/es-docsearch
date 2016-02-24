@@ -1,5 +1,9 @@
 {
-  "htmltype": {
+  "settings  ": {
+    "number_of_shards": 5,
+    "number_of_replicas": 1
+  },
+  "doctype": {
     "properties": {
       "file": {
         "type": "attachment",
@@ -22,13 +26,11 @@
         "type": "date",
         "format": "strict_date_optional_time||epoch_millis"
       },
-      "docname": {
-        "type": "string",
-        "index": "no"
+      "path": {
+        "type": "string"
       },
-      "sectionname": {
-        "type": "string",
-        "index": "no"
+      "parenttitle": {
+        "type": "string"
       }
     }
   }

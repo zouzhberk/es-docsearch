@@ -6,14 +6,18 @@
       "file.content"
     ],
     "query": {
-      "match": {
-        "file.content": "搜索引擎"
+      "multi_match": {
+        "query": "failover",
+        "fields": [
+          "file.content",
+          "title"
+        ]
       }
     },
     "highlight": {
       "fields": {
-        "file.content": {
-        }
+        "file.content": {},
+        "title": {}
       }
     }
   },

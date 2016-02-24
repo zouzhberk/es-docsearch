@@ -1,43 +1,41 @@
 {
-  "htmltype": {
-    "dynamic": "strict",
-    "properties": {
-      "file": {
-        "type": "attachment",
-        "fields": {
-          "content": {
-            "analyzer": "ik",
-            "type": "string",
-            "term_vector": "with_positions_offsets",
-            "store": true
-          },
-          "title": {
-            "type": "string",
-            "analyzer": "ik",
-            "store": "yes"
-          },
-          "date": {
-            "store": "yes",
-            "format": "strict_date_optional_time||epoch_millis"
-          },
-          "author": {
-            "type": "string",
-            "analyzer": "ik"
-          },
-          "keywords": {
-            "type": "string",
-            "store": "yes"
-          },
-          "content_type": {
-            "store": "yes"
-          },
-          "content_length": {
-            "type": "integer",
-            "store": "yes"
-          },
-          "language": {
-            "store": "yes"
-          }
+  "dynamic": "strict",
+  "properties": {
+    "file": {
+      "type": "attachment",
+      "fields": {
+        "content": {
+          "analyzer": "ik",
+          "type": "string",
+          "term_vector": "with_positions_offsets",
+          "store": true
+        },
+        "title": {
+          "type": "string",
+          "analyzer": "ik",
+          "store": "yes"
+        },
+        "date": {
+          "store": "yes",
+          "format": "strict_date_optional_time||epoch_millis"
+        },
+        "author": {
+          "type": "string",
+          "analyzer": "ik"
+        },
+        "keywords": {
+          "type": "string",
+          "store": "yes"
+        },
+        "content_type": {
+          "store": "yes"
+        },
+        "content_length": {
+          "type": "integer",
+          "store": "yes"
+        },
+        "language": {
+          "store": "yes"
         }
       }
     }

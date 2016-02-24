@@ -80,7 +80,7 @@ public class DocIndexs {
         Settings settings = Settings.settingsBuilder().put("cluster.name", "my-application").build();
 
         TransportClient client = TransportClient.builder().settings(settings).build()
-                .addTransportAddress(new InetSocketTransportAddress(InetAddress.getByName("bd0"), 9300));
+                .addTransportAddress(new InetSocketTransportAddress(InetAddress.getByName("localhost"), 9300));
         if (createIndex(client, indexname)) {
             if (createMapping(client, indexname, "htmltype")) {
                 Map<String, String> indexdoc = getIndexFile();
