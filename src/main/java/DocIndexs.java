@@ -82,15 +82,17 @@ public class DocIndexs {
         TransportClient client = TransportClient.builder().settings(settings).build()
                 .addTransportAddress(new InetSocketTransportAddress(InetAddress.getByName("localhost"), 9300));
         if (createIndex(client, indexname)) {
-            if (createMapping(client, indexname, "htmltype")) {
+            if (createMapping(client, indexname, "doctype")) {
                 Map<String, String> indexdoc = getIndexFile();
                 for (String keys : indexdoc.keySet()) {
                     XContentBuilder builderIndex = XContentFactory.jsonBuilder().startObject()
                             .field("file", indexdoc.get(keys))
                             .field("title", keys.split("/")[keys.split("/").length - 1])
                             .field("date", LocalDateTime.now())
+                            .field("path", keys)
+                            .field("parenttitle", keys)
                             .endObject();
-                    index(client, builderIndex, "htmltype", indexname);
+                    index(client, builderIndex, "doctype", indexname);
                 }
             }
 

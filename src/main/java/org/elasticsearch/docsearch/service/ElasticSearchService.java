@@ -79,7 +79,7 @@ public interface ElasticSearchService {
         RequestEntity param = gson.fromJson(body, RequestEntity.class);
         System.out.println(param);
         long start = System.currentTimeMillis();
-        esservice.search("docindex1454315265611", param, 2, 1).toBlocking().subscribe(x -> {
+        esservice.search("docindex-20160224145428", param, 10, 5).toBlocking().subscribe(x -> {
             System.out.println(gson.toJson(x));
         });
         long end = System.currentTimeMillis();
