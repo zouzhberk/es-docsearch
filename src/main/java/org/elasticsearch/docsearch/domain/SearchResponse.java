@@ -122,6 +122,10 @@ public class SearchResponse {
             private String id;
             @JsonProperty("_score")
             private double score;
+
+            @JsonProperty("_source")
+            private Map<String, String> sources;
+
             private Map<String, List<String>> fields;
             private Map<String, List<String>> highlight;
 

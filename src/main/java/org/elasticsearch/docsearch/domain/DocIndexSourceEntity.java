@@ -1,6 +1,8 @@
 package org.elasticsearch.docsearch.domain;
 
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 
 /**
@@ -34,10 +36,15 @@ public class DocIndexSourceEntity implements Serializable {
         this.parentTitle = parentTitle;
     }
 
+    @SerializedName("title")
     private String title;
+    @SerializedName("file")
     private String contentBase64;
+    @SerializedName("date")
     private String indexDateTime;
+    @SerializedName("path")
     private String path;
+    @SerializedName("parenttitle")
     private String parentTitle;
 
     public void setTitle(String title) {

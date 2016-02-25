@@ -14,8 +14,7 @@
       },
       "title": {
         "type": "string",
-        "store": true,
-        "analyzer": "ik",
+        "analyzer": "not_analyzed",
         "term_vector": "with_positions_offsets"
       },
       "date": {
@@ -23,10 +22,12 @@
         "format": "strict_date_optional_time||epoch_millis"
       },
       "path": {
-        "type": "string"
+        "type": "string",
+        "analyzer": "not_analyzed"
       },
       "parenttitle": {
-        "type": "string"
+        "type": "string",
+        "analyzer": "not_analyzed"
       }
     }
   }

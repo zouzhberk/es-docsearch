@@ -59,27 +59,30 @@ public interface ElasticSearchService {
 //                ".content","StackOverflow")).;
 
         String body = "{\n" +
-                "    \"fields\": [\n" +
-                "      \"file.content\"\n" +
-                "    ],\n" +
-                "    \"query\": {\n" +
-                "      \"match\": {\n" +
-                "        \"file.content\": \"搜索引擎\"\n" +
-                "      }\n" +
-                "    },\n" +
-                "    \"highlight\": {\n" +
-                "      \"fields\": {\n" +
-                "        \"file.content\": {\n" +
-                "        }\n" +
-                "      }\n" +
+                "  \"query\": {\n" +
+                "    \"match\": {\n" +
+                "      \"file.content\": \"搜索引擎\"\n" +
                 "    }\n" +
-                "  }";
+                "  },\n" +
+                "  \"_source\": [\n" +
+                "    \"title\",\n" +
+                "    \"path\",\n" +
+                "    \"parenttitle\",\n" +
+                "    \"date\",\n" +
+                "  ],\n" +
+                "  \"highlight\": {\n" +
+                "    \"fields\": {\n" +
+                "      \"file.content\": {},\n" +
+                "      \"title\": {}\n" +
+                "    }\n" +
+                "  }\n" +
+                "}";
 
 
         RequestEntity param = gson.fromJson(body, RequestEntity.class);
         System.out.println(param);
         long start = System.currentTimeMillis();
-        esservice.search("docindex-20160224145428", param, 10, 5).toBlocking().subscribe(x -> {
+        esservice.search("helpcenter-20160225120502", param, 10, 5).toBlocking().subscribe(x -> {
             System.out.println(gson.toJson(x));
         });
         long end = System.currentTimeMillis();

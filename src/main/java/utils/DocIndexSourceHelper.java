@@ -26,6 +26,11 @@ public class DocIndexSourceHelper {
     public static String DOC_TAG_TITLE = "#";
     public static String CHARPTER_TAG_TITLE = "title:";
 
+    public static List<String> listDocTypeName(Path path) throws IOException {
+        return Files.walk(path, 2).filter(x -> x.getFileName().toString().endsWith("chapter.md"))
+                .map(x -> x.getParent().getFileName().toString()).distinct().sorted().collect(Collectors.toList());
+    }
+
     public static List<DocIndexSourceEntity> listDocEntries(Path path) throws IOException {
         Function<? super Path, String> keymapper = p -> {
             return p.getParent().toString();
@@ -53,36 +58,72 @@ public class DocIndexSourceHelper {
         };
 
         Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
-        Map<String, String> titlemap = Files.walk(path, 2).filter(x -> x.getFileName().toString().endsWith("chapter.md")).collect(Collectors.toMap(keymapper, chaptervaluemapper, (x, y) -> x)).entrySet().stream().filter(x -> x.getValue() != null && !x.getValue().isEmpty()).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+        Map<String, String> titlemap = Files.walk(path, 2).filter(x -> x.getFileName().toString().endsWith("chapter.md"))
+                .collect(Collectors.toMap(keymapper, chaptervaluemapper, (x, y) -> x)).entrySet().stream()
+                .filter(x -> x.getValue() != null && !x.getValue().isEmpty()).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
         System.out.println(gson.toJson(titlemap));
+        Function<? super DocIndexSourceEntity, String> typeMapper = p -> {
+            return Paths.get(p.getPath()).getParent().getFileName().toString();
+        };
+        Function<? super DocIndexSourceEntity, DocIndexSourceEntity> docEntityMapper = p -> {
+            return p;
+        };
+        Map<String, DocIndexSourceEntity> mapEntries = titlemap.entrySet().stream().flatMap(x
+                        ->
+                {
+                    try {
+                        return Files.walk(Paths.get(x.getKey()), 2).filter(y -> y.getFileName().toString().endsWith("docs.md"))
+                                .collect(Collectors.toMap(dockeymapper, docvaluemapper, (m, n) -> m)).entrySet().stream()
+                                .filter(m -> m.getValue() != null && !m.getValue().isEmpty()).map(m -> {
+                                    DocIndexSourceEntity entity = new DocIndexSourceEntity();
+                                    try {
+                                        byte[] base64str = Base64Utils.encodeToBase64(Paths.get(m.getKey()));
+                                        entity.setContentBase64(new String(base64str));
+                                        entity.setTitle(m.getValue());
+                                        entity.setParentTitle(x.getValue());
+                                        entity.setPath(m.getKey());
+                                        entity.setIndexDateTime(LocalDateTime.now().toString());
+                                        return entity;
+                                    } catch (Exception e) {
+                                        return null;
+                                    }
+                                }).filter(Objects::nonNull);
+                    } catch (IOException e) {
+                        return Stream.empty();
+                    }
+                }
+        ).collect(Collectors.toMap(typeMapper, docEntityMapper));
 
         List<DocIndexSourceEntity> list = titlemap.entrySet().stream().flatMap(x -> {
             try {
-                return Files.walk(Paths.get(x.getKey()), 2).filter(y -> y.getFileName().toString().endsWith("docs.md")).collect(Collectors.toMap(dockeymapper, docvaluemapper, (m, n) -> m)).entrySet().stream().filter(m -> m.getValue() != null && !m.getValue().isEmpty()).map(m -> {
-                    DocIndexSourceEntity entity = new DocIndexSourceEntity();
-                    try {
-                        byte[] base64str = Base64Utils.encodeToBase64(Paths.get(m.getKey()));
-                        entity.setContentBase64(new String(base64str));
-                        entity.setTitle(m.getValue());
-                        entity.setParentTitle(x.getValue());
-                        entity.setPath(m.getKey());
-                        entity.setIndexDateTime(LocalDateTime.now().toString());
-                        return entity;
-                    } catch (Exception e) {
-                        return null;
-                    }
-                }).filter(Objects::nonNull);
+                return Files.walk(Paths.get(x.getKey()), 2).filter(y -> y.getFileName().toString().endsWith("docs.md"))
+                        .collect(Collectors.toMap(dockeymapper, docvaluemapper, (m, n) -> m)).entrySet().stream()
+                        .filter(m -> m.getValue() != null && !m.getValue().isEmpty()).map(m -> {
+                            DocIndexSourceEntity entity = new DocIndexSourceEntity();
+                            try {
+                                byte[] base64str = Base64Utils.encodeToBase64(Paths.get(m.getKey()));
+                                entity.setContentBase64(new String(base64str));
+                                entity.setTitle(m.getValue());
+                                entity.setParentTitle(x.getValue());
+                                entity.setPath(m.getKey());
+                                entity.setIndexDateTime(LocalDateTime.now().toString());
+                                return entity;
+                            } catch (Exception e) {
+                                return null;
+                            }
+                        }).filter(Objects::nonNull);
             } catch (IOException e) {
                 return Stream.empty();
             }
         }).collect(Collectors.toList());
-        System.out.println(gson.toJson(list));
         return list;
     }
 
     public static void main(String[] args) throws IOException {
-        listDocEntries(Paths.get(DOC_PATH));
+//        listDocEntries(Paths.get(DOC_PATH));
+        System.out.println(listDocTypeName(Paths.get(DOC_PATH)));
     }
+
 
     public static Map<String, String> getIndexFile(String path) throws IOException {
 
