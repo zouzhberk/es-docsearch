@@ -21,22 +21,22 @@ import java.time.format.DateTimeFormatter;
 public interface DocIndexService {
 
     @PUT("/{index}")
-    public Observable<Object> createIndex(@Path("index") String indexName, @Body ElasticSearchService.RequestEntity body);
+    public Observable<Object> createIndex(@Path("index") String indexName, @Body DocSearchService.RequestEntity body);
 
     @PUT("/{index}/{type}/_mapping")
-    public Observable<Object> putMapping(@Path("index") String indexName, @Path(("type")) String type, @Body ElasticSearchService.RequestEntity body);
+    public Observable<Object> putMapping(@Path("index") String indexName, @Path(("type")) String type, @Body DocSearchService.RequestEntity body);
 
     @POST("/{index}/{type}/{id}")
-    public Observable<Object> indexDoc(@Path("index") String indexName, @Path(("type")) String type, @Path("id") String id, @Body ElasticSearchService.RequestEntity body);
+    public Observable<Object> indexDoc(@Path("index") String indexName, @Path(("type")) String type, @Path("id") String id, @Body DocSearchService.RequestEntity body);
 
-    public static Observable<Object> putMapping(DocIndexService service, String indexName, String type, ElasticSearchService.RequestEntity mappingJson) {
+    public static Observable<Object> putMapping(DocIndexService service, String indexName, String type, DocSearchService.RequestEntity mappingJson) {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         return service.putMapping(indexName, type, mappingJson);
     }
 
     public static Observable<Object> indexDoc(DocIndexService service, String indexName, String type, DocIndexSourceEntity entity) {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        ElasticSearchService.RequestEntity request = gson.fromJson(gson.toJson(entity), ElasticSearchService.RequestEntity.class);
+        DocSearchService.RequestEntity request = gson.fromJson(gson.toJson(entity), DocSearchService.RequestEntity.class);
         return service.indexDoc(indexName, type, entity.getPath(), request);
     }
 
@@ -58,7 +58,7 @@ public interface DocIndexService {
                 "  }";
 
 
-        ElasticSearchService.RequestEntity param = gson.fromJson(indexbody, ElasticSearchService.RequestEntity.class);
+        DocSearchService.RequestEntity param = gson.fromJson(indexbody, DocSearchService.RequestEntity.class);
         long start = System.currentTimeMillis();
         String indexname = "helpcenter-" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
         esservice.createIndex(indexname, param).toBlocking().subscribe(x -> System.out.println(x));
@@ -97,12 +97,12 @@ public interface DocIndexService {
                         "    }\n" +
                         "  }\n" +
                         "}";
-        ElasticSearchService.RequestEntity paramMapping = gson.fromJson(indexmapping, ElasticSearchService.RequestEntity.class);
+        DocSearchService.RequestEntity paramMapping = gson.fromJson(indexmapping, DocSearchService.RequestEntity.class);
 //        esservice.putMapping(indexname, "doctype", paramMapping).toBlocking().subscribe(x -> System.out.println(x));
         DocIndexSourceHelper.listDocTypeName(Paths.get(DocIndexSourceHelper.DOC_PATH)).forEach(x -> {
             System.out.println(indexmapping.replaceAll("indextype", x.toString()));
             putMapping(esservice, indexname, x.toString(), gson.fromJson(indexmapping.replaceAll("indextype", x.toString()),
-                    ElasticSearchService.RequestEntity.class)).toBlocking().subscribe(System.out::println);
+                    DocSearchService.RequestEntity.class)).toBlocking().subscribe(System.out::println);
         });
         DocIndexSourceHelper.listDocEntries(Paths.get(DocIndexSourceHelper.DOC_PATH)).forEach(x -> indexDoc(esservice, indexname, Paths.get(x.getPath())
                 .getParent().getParent().getFileName().toString(), x).toBlocking().subscribe(System.out::println));

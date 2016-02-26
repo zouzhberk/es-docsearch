@@ -17,7 +17,7 @@ import java.util.HashMap;
 /**
  * Created by berk on 1/30/16.
  */
-public interface ElasticSearchService {
+public interface DocSearchService {
 
     @GET("/")
     public Observable<ServerEntity> getServerInfo();
@@ -45,7 +45,7 @@ public interface ElasticSearchService {
                 .addConverterFactory(JacksonConverterFactory.create()).addCallAdapterFactory(RxJavaCallAdapterFactory
                         .create())
                 .build();
-        ElasticSearchService esservice = retrofit.create(ElasticSearchService.class);
+        DocSearchService esservice = retrofit.create(DocSearchService.class);
         esservice.getServerInfo().subscribe(x -> {
             System.out.println(x);
         });
