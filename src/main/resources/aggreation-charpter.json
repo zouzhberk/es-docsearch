@@ -1,0 +1,20 @@
+{
+  "from": 0,
+  "size": 0,
+  "query": {
+    "match": {
+      "parenttitle": "搜索引擎"
+    }
+  },
+  "aggs": {
+    "distinction": {
+      "terms": {
+        "field": "title",
+        "size": 0,
+        "order": {
+          "_term": "asc"
+        }
+      }
+    }
+  }
+}

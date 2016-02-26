@@ -61,28 +61,38 @@ public interface ElasticSearchService {
         String body = "{\n" +
                 "  \"query\": {\n" +
                 "    \"match\": {\n" +
-                "      \"file.content\": \"搜索引擎\"\n" +
+                "      \"file.content\": \"daocloud\"\n" +
                 "    }\n" +
                 "  },\n" +
                 "  \"_source\": [\n" +
                 "    \"title\",\n" +
                 "    \"path\",\n" +
                 "    \"parenttitle\",\n" +
-                "    \"date\",\n" +
+                "    \"date\"\n" +
                 "  ],\n" +
                 "  \"highlight\": {\n" +
                 "    \"fields\": {\n" +
-                "      \"file.content\": {},\n" +
-                "      \"title\": {}\n" +
+                "      \"file.content\": {\n" +
+                "        \"fragment_size\": 20,\n" +
+                "        \"number_of_fragments\": 3\n" +
+                "      }\n" +
+                "    }\n" +
+                "  },\n" +
+                "  \"aggs\": {\n" +
+                "    \"distinction\": {\n" +
+                "      \"terms\": {\n" +
+                "        \"field\": \"title\",\n" +
+                "        \"order\": {\n" +
+                "          \"_term\": \"asc\"\n" +
+                "        }\n" +
+                "      }\n" +
                 "    }\n" +
                 "  }\n" +
                 "}";
-
-
         RequestEntity param = gson.fromJson(body, RequestEntity.class);
-        System.out.println(param);
+        System.out.println(body);
         long start = System.currentTimeMillis();
-        esservice.search("helpcenter-20160225120502", param, 10, 5).toBlocking().subscribe(x -> {
+        esservice.search("helpcenter-20160226093450", param, 10, 5).toBlocking().subscribe(x -> {
             System.out.println(gson.toJson(x));
         });
         long end = System.currentTimeMillis();

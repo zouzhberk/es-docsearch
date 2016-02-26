@@ -79,7 +79,7 @@ public interface DocIndexService {
                         "      },\n" +
                         "      \"title\": {\n" +
                         "        \"type\": \"string\",\n" +
-                        "        \"analyzer\": \"not_analyzed\",\n" +
+                        "        \"index\": \"not_analyzed\",\n" +
                         "        \"term_vector\": \"with_positions_offsets\"\n" +
                         "      },\n" +
                         "      \"date\": {\n" +
@@ -88,20 +88,22 @@ public interface DocIndexService {
                         "      },\n" +
                         "      \"path\": {\n" +
                         "        \"type\": \"string\",\n" +
-                        "        \"analyzer\": \"not_analyzed\"\n" +
+                        "        \"index\": \"not_analyzed\"\n" +
                         "      },\n" +
                         "      \"parenttitle\": {\n" +
                         "        \"type\": \"string\",\n" +
-                        "        \"analyzer\": \"not_analyzed\"\n" +
+                        "        \"index\": \"not_analyzed\"\n" +
                         "      }\n" +
                         "    }\n" +
                         "  }\n" +
                         "}";
         ElasticSearchService.RequestEntity paramMapping = gson.fromJson(indexmapping, ElasticSearchService.RequestEntity.class);
 //        esservice.putMapping(indexname, "doctype", paramMapping).toBlocking().subscribe(x -> System.out.println(x));
-        DocIndexSourceHelper.listDocTypeName(Paths.get(DocIndexSourceHelper.DOC_PATH)).forEach(x -> putMapping(esservice, indexname, x.toString(), gson.fromJson(indexmapping.replaceAll("indextype", x.toString()), ElasticSearchService.RequestEntity.class)))
-        ;
-
+        DocIndexSourceHelper.listDocTypeName(Paths.get(DocIndexSourceHelper.DOC_PATH)).forEach(x -> {
+            System.out.println(indexmapping.replaceAll("indextype", x.toString()));
+            putMapping(esservice, indexname, x.toString(), gson.fromJson(indexmapping.replaceAll("indextype", x.toString()),
+                    ElasticSearchService.RequestEntity.class)).toBlocking().subscribe(System.out::println);
+        });
         DocIndexSourceHelper.listDocEntries(Paths.get(DocIndexSourceHelper.DOC_PATH)).forEach(x -> indexDoc(esservice, indexname, Paths.get(x.getPath())
                 .getParent().getParent().getFileName().toString(), x).toBlocking().subscribe(System.out::println));
         //  esservice.deleteIndex(indexname).subscribe(x -> System.out.println(x));

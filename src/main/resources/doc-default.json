@@ -1,5 +1,10 @@
 {
   "doctype": {
+    "_source": {
+      "excludes": [
+        "file.content"
+      ]
+    },
     "properties": {
       "file": {
         "type": "attachment",
