@@ -17,7 +17,7 @@ import java.util.HashMap;
 /**
  * Created by berk on 1/30/16.
  */
-public interface DocSearchService {
+public interface ElasticSearchService {
 
     @GET("/")
     public Observable<ServerEntity> getServerInfo();
@@ -35,6 +35,12 @@ public interface DocSearchService {
     public Observable<SearchResponse> search(@Path("index") String indexName, @Body RequestEntity body, @Query
             ("size") int size, @Query("from") int from);
 
+    @POST("/_search")
+    public Observable<SearchResponse> search(@Body RequestEntity body, @Query("size") int size, @Query("from") int
+            from);
+
+    @POST
+    public Observable<SearchResponse> findDocument(String indexName, String typeName,String id);
 
     public static class RequestEntity extends HashMap<String, Object> {
 
@@ -45,11 +51,12 @@ public interface DocSearchService {
                 .addConverterFactory(JacksonConverterFactory.create()).addCallAdapterFactory(RxJavaCallAdapterFactory
                         .create())
                 .build();
-        DocSearchService esservice = retrofit.create(DocSearchService.class);
+        ElasticSearchService esservice = retrofit.create(ElasticSearchService.class);
         esservice.getServerInfo().subscribe(x -> {
             System.out.println(x);
         });
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
 
         //  esservice.search().subscribe(x -> System.out.println(gson.toJson(x)));
         // QueryBuilders.indicesQuery(QueryBuilder.)
@@ -59,40 +66,27 @@ public interface DocSearchService {
 //                ".content","StackOverflow")).;
 
         String body = "{\n" +
-                "  \"query\": {\n" +
-                "    \"match\": {\n" +
-                "      \"file.content\": \"daocloud\"\n" +
-                "    }\n" +
-                "  },\n" +
-                "  \"_source\": [\n" +
-                "    \"title\",\n" +
-                "    \"path\",\n" +
-                "    \"parenttitle\",\n" +
-                "    \"date\"\n" +
-                "  ],\n" +
-                "  \"highlight\": {\n" +
-                "    \"fields\": {\n" +
-                "      \"file.content\": {\n" +
-                "        \"fragment_size\": 20,\n" +
-                "        \"number_of_fragments\": 3\n" +
+                "    \"fields\": [\n" +
+                "      \"file.content\"\n" +
+                "    ],\n" +
+                "    \"query\": {\n" +
+                "      \"match\": {\n" +
+                "        \"file.content\": \"搜索引擎\"\n" +
                 "      }\n" +
-                "    }\n" +
-                "  },\n" +
-                "  \"aggs\": {\n" +
-                "    \"distinction\": {\n" +
-                "      \"terms\": {\n" +
-                "        \"field\": \"title\",\n" +
-                "        \"order\": {\n" +
-                "          \"_term\": \"asc\"\n" +
+                "    },\n" +
+                "    \"highlight\": {\n" +
+                "      \"fields\": {\n" +
+                "        \"file.content\": {\n" +
                 "        }\n" +
                 "      }\n" +
                 "    }\n" +
-                "  }\n" +
-                "}";
+                "  }";
+
+
         RequestEntity param = gson.fromJson(body, RequestEntity.class);
-        System.out.println(body);
+        System.out.println(param);
         long start = System.currentTimeMillis();
-        esservice.search("helpcenter-20160226093450", param, 10, 5).toBlocking().subscribe(x -> {
+        esservice.search("docindex-20160202100500", param, 2, 1).toBlocking().subscribe(x -> {
             System.out.println(gson.toJson(x));
         });
         long end = System.currentTimeMillis();
